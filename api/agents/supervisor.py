@@ -3,7 +3,7 @@ from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from langgraph.prebuilt import create_react_agent
 
-model = ChatOpenAI(model="gpt-4o")
+model = ChatOpenAI(model="gpt-4o-mini")
 
 # Create specialized agents
 
