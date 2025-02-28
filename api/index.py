@@ -3,7 +3,7 @@ import os
 load_dotenv()  # take environment variables from .env.
 
 from fastapi import FastAPI
-from .agents.supervisor import supervisor
+from .agents.supervisor import scrum_master 
 
 
 print(os.getenv('OPENAI_API_KEY'))
@@ -12,7 +12,7 @@ app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
 @app.get("/api/py/helloFastApi")
 def hello_fast_api():
-    result = supervisor.invoke({
+    result = scrum_master.invoke({
         "messages": [
             {
                 "role": "user",
