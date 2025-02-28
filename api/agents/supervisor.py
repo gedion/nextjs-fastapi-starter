@@ -1,6 +1,9 @@
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from langgraph.prebuilt import create_react_agent
+from langchain import hub
+from .checkpoint import get_connection_pool, initialize_store_and_checkpointer
+
 
 model = ChatOpenAI(model="gpt-4o-mini")
 
@@ -36,18 +39,17 @@ backend_dev = create_react_agent(
     )
 )
 
+prompt = hub.pull("scrum-master").messages[0].format()
 # Create Scrum Master / Product Owner workflow
 workflow = create_supervisor(
     [frontend_dev, backend_dev],
     model=model,
-    prompt=(
-        "You are a Scrum Master and Product Owner. "
-        "You manage a frontend developer and a backend developer. "
-        "Delegate frontend tasks (UI, styling, UX) to frontend_dev. "
-        "Delegate backend tasks (API, data processing, business logic) to backend_dev. "
-        "Ensure tasks are prioritized correctly and developers focus on their domain."
-    )
+    prompt=prompt,
 )
 
-# Compile and run
-scrum_master = workflow.compile()
+async def compile_workflow():
+  pool = await get_connection_pool()
+  store, checkpointer = await initialize_store_and_checkpointer(pool)
+  # Compile and run
+  scrum_master = workflow.compile(store=store, checkpointer=checkpointer)
+  return scrum_master
