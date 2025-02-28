@@ -16,7 +16,7 @@ def hello_fast_api():
         "messages": [
             {
                 "role": "user",
-                "content": "what's the combined headcount of the FAANG companies in 2024?"
+                "content": "Discuss a potential ai based application for gardening simulator"
             }
         ]
     })
