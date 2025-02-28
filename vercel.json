@@ -1,10 +1,10 @@
 {
   "functions": {
     "api/*.py": {
-      "maxDuration": 60 // This function can run for a maximum of 30 seconds
+      "maxDuration": 60
     },
     "api/*.js": {
-      "maxDuration": 15 // These functions can run for a maximum of 15 seconds
+      "maxDuration": 15
     }
   }
 }
