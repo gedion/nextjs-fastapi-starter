@@ -7,8 +7,7 @@ from langgraph_api.api import routes as langgraph_routers
 
 
 # ✅ Create FastAPI app
-app = FastAPI(lifespan=lifespan)
-
+app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json", lifespan=lifespan)
 # ✅ Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -27,3 +26,7 @@ for route in langgraph_routers:
         app.router.routes.append(route)
 
 print("🚀 FastAPI Server with Custom Assistant Routes is ready!")
+
+@app.get("/api/py/prompt-optimizer")
+async def hello_fast_api():
+    return { "value": "hello fast api" }
