@@ -1,36 +1,29 @@
 from dotenv import load_dotenv
-from typing import Optional
-import os
-load_dotenv()  # take environment variables from .env.
-
-from fastapi import FastAPI, Query
-from fastapi.responses import StreamingResponse
-from .agents.supervisor import compile_workflow
-from .prompts.optimizer import optimize
-
-print(os.getenv('OPENAI_API_KEY'))
-### Create FastAPI instance with custom docs and openapi url
-app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
+load_dotenv()
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from langgraph_api.lifespan import lifespan
+from langgraph_api.api import routes as langgraph_routers
 
 
-@app.get("/api/py/helloFastApi")
-async def hello_fast_api(content: str = Query(...), thread_id: Optional[str] = Query(None)):
-    workflow = await compile_workflow()
-    config = {"configurable": {"thread_id": thread_id if thread_id else "tid-default-1"}}
-    result = await workflow.ainvoke({
-        "messages": [
-            {
-                "role": "user",
-                "content": content
-            }
-        ]},
-        config
-    )
-    #print(result)
-    #response = StreamingResponse(result)
-    #response.headers['x-vercel-ai-data-stream'] = 'v1'
-    return result 
+# ✅ Create FastAPI app
+app = FastAPI(lifespan=lifespan)
 
-@app.get("/api/py/prompt-optimizer")
-async def hello_fast_api():
-    return await optimize()
+# ✅ Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace "*" with specific origins if needed for security
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
+
+# ✅ Debugging: Print all registered assistant routes
+print("📌 Final registered Assistant routes in FastAPI:")
+for route in langgraph_routers:
+    if route.path in ("/docs", "/openapi.json"):
+        app.router.routes.insert(0, route)
+    else:
+        app.router.routes.append(route)
+
+print("🚀 FastAPI Server with Custom Assistant Routes is ready!")
