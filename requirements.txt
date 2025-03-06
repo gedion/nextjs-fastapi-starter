@@ -10,4 +10,4 @@ langchain-community>=0.3.7
 langchain-core>=0.3.40
 langmem==0.0.11
 langgraph-checkpoint-postgres>=2.0.15
-git+https://github.com/gedion/langgraph_api-0.0.27.git
+https://github.com/gedion/langgraph_api-0.0.27/releases/download/tag/langgraph_api-0.0.27-py3-none-any.whl
